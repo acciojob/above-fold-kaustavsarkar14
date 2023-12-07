@@ -5,10 +5,13 @@ import './../styles/App.css';
 const App = () => {
   const [data, setData] = useState([])
   const [page, setPage] = useState(1)
+  const [isLoading, setLoading] = useState(false)
+
   function handleScroll(e) {
     const { scrollTop, clientHeight, scrollHeight } = document.documentElement
     if (scrollTop + clientHeight >= scrollHeight - 10) {
       setPage(page=>page + 1)
+      setLoading(true)
     }
   }
   console.log(page)
@@ -16,7 +19,10 @@ const App = () => {
     try {
       fetch(`https://jsonplaceholder.typicode.com/photos?_page=${page}&_limit=10`)
         .then(data => data.json())
-        .then(newData => setData([...data, ...newData]))
+        .then(newData => {
+          setData([...data, ...newData])
+          setLoading(false)
+        })
     }
     catch (err) {
       console.log(err)
@@ -43,7 +49,7 @@ const App = () => {
           )
         })
       }
-
+      <p className="loadmore">Loading more items...</p>
     </div>
   )
 }
